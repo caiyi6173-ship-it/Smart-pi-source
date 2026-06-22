@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+data/chroma/
+data/qdrant/*
+!data/qdrant/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+

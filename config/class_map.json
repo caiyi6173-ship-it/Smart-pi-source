@@ -1,0 +1,198 @@
+﻿{
+  "dataset_name": "shezhenv3-txt",
+  "mapping_version": "2026-03-20",
+  "status": "assumption_based",
+  "missing_original_ids": [
+    18
+  ],
+  "notes": [
+    "This mapping is inferred from the current project knowledge base and backend label rules because the dataset folder does not include an official names file.",
+    "Original ids observed in labels are 0..17, 19, 20 and 21. Original id 18 is missing in the current dataset.",
+    "Classes around shenquao/shenqu/shenqutu and gandanao/gandantu are kept explicit so training outputs remain traceable.",
+    "If the original dataset paper or annotation guide is found later, update this file and rerun prepare_dataset.py."
+  ],
+  "classes": [
+    {
+      "original_id": 0,
+      "remapped_id": 0,
+      "canonical_label": "healthytongue",
+      "display_name_zh": "健舌",
+      "aliases": [
+        "jianshe",
+        "healthy tongue"
+      ],
+      "verified": true
+    },
+    {
+      "original_id": 1,
+      "remapped_id": 1,
+      "canonical_label": "botaishe",
+      "display_name_zh": "剥苔舌",
+      "aliases": [
+        "bopishe"
+      ],
+      "verified": true
+    },
+    {
+      "original_id": 2,
+      "remapped_id": 2,
+      "canonical_label": "hongshe",
+      "display_name_zh": "红舌",
+      "aliases": [
+        "hongsex"
+      ],
+      "verified": true
+    },
+    {
+      "original_id": 3,
+      "remapped_id": 3,
+      "canonical_label": "zishe",
+      "display_name_zh": "紫舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 4,
+      "remapped_id": 4,
+      "canonical_label": "pangdashe",
+      "display_name_zh": "胖大舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 5,
+      "remapped_id": 5,
+      "canonical_label": "shoushe",
+      "display_name_zh": "瘦舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 6,
+      "remapped_id": 6,
+      "canonical_label": "hongdianshe",
+      "display_name_zh": "红点舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 7,
+      "remapped_id": 7,
+      "canonical_label": "livenshe",
+      "display_name_zh": "裂纹舌",
+      "aliases": [
+        "liewenshe"
+      ],
+      "verified": true
+    },
+    {
+      "original_id": 8,
+      "remapped_id": 8,
+      "canonical_label": "chihenshe",
+      "display_name_zh": "齿痕舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 9,
+      "remapped_id": 9,
+      "canonical_label": "baitaishe",
+      "display_name_zh": "白苔舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 10,
+      "remapped_id": 10,
+      "canonical_label": "yellowcoates",
+      "display_name_zh": "黄苔舌",
+      "aliases": [
+        "yellow coates",
+        "huangtaishe"
+      ],
+      "verified": true
+    },
+    {
+      "original_id": 11,
+      "remapped_id": 11,
+      "canonical_label": "heitaishe",
+      "display_name_zh": "黑苔舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 12,
+      "remapped_id": 12,
+      "canonical_label": "huataishe",
+      "display_name_zh": "光滑舌",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 13,
+      "remapped_id": 13,
+      "canonical_label": "shenquao",
+      "display_name_zh": "肾区凹陷",
+      "aliases": [],
+      "verified": false
+    },
+    {
+      "original_id": 14,
+      "remapped_id": 14,
+      "canonical_label": "shenqu",
+      "display_name_zh": "肾区变异",
+      "aliases": [],
+      "verified": false
+    },
+    {
+      "original_id": 15,
+      "remapped_id": 15,
+      "canonical_label": "shenqutu",
+      "display_name_zh": "肾区突出",
+      "aliases": [],
+      "verified": false
+    },
+    {
+      "original_id": 16,
+      "remapped_id": 16,
+      "canonical_label": "gandanao",
+      "display_name_zh": "肝胆区凹陷",
+      "aliases": [
+        "gandano"
+      ],
+      "verified": false
+    },
+    {
+      "original_id": 17,
+      "remapped_id": 17,
+      "canonical_label": "gandantu",
+      "display_name_zh": "肝胆区突出",
+      "aliases": [],
+      "verified": false
+    },
+    {
+      "original_id": 19,
+      "remapped_id": 18,
+      "canonical_label": "piweiao",
+      "display_name_zh": "脾胃区凹陷",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 20,
+      "remapped_id": 19,
+      "canonical_label": "xinfeiao",
+      "display_name_zh": "心肺区凹陷",
+      "aliases": [],
+      "verified": true
+    },
+    {
+      "original_id": 21,
+      "remapped_id": 20,
+      "canonical_label": "xinfeitu",
+      "display_name_zh": "心肺区突出",
+      "aliases": [],
+      "verified": true
+    }
+  ]
+}

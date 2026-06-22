@@ -1,0 +1,61 @@
+# Secrets and local runtime config
+.env
+*.env
+!*.env.example
+!*.example
+openclaw.json
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime data and logs
+*.log
+*.bak
+*.bak*
+*.bak.*
+*.orig
+*.sqlite
+*.db
+*.wav
+*.mp3
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.avi
+*result*.json
+captures/
+results/
+cache/
+data/chroma/
+data/qdrant/
+data/processed/
+data/local_vectors.json
+
+# Model artifacts
+*.pt
+*.pth
+*.onnx
+*.torchscript
+*.engine
+*.bin
+models/
+weights/
+runs/
+
+# OpenClaw runtime state
+.openclaw/
+agents/
+sessions/
+workspace-state.json
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

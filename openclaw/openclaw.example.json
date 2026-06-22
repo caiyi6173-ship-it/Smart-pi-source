@@ -1,0 +1,89 @@
+{
+  "wizard": {
+    "lastRunAt": "2026-03-25T12:04:52.829748Z",
+    "lastRunVersion": "2026.3.13",
+    "lastRunCommand": "smarttcm-reinstall",
+    "lastRunMode": "local"
+  },
+  "tools": {
+    "profile": "coding"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "models": {
+    "providers": {
+      "alibaba-cloud": {
+        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "apiKey": "<redacted>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "qwen3-max-2026-01-23",
+            "name": "qwen3-max-2026-01-23",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 262144,
+            "maxTokens": "<redacted>",
+            "api": "openai-completions"
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "/home/pi/.openclaw/workspace",
+      "model": {
+        "primary": "alibaba-cloud/qwen3-max-2026-01-23"
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "tools": {
+          "profile": "full"
+        }
+      }
+    ]
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": "<redacted>",
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record",
+        "contacts.add",
+        "calendar.add",
+        "reminders.add",
+        "sms.send"
+      ]
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.3.13",
+    "lastTouchedAt": "2026-03-25T12:04:52.829806Z"
+  }
+}
