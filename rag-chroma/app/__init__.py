@@ -1,2 +1,2 @@
-"""SmartTCM RAG service."""
+"""smartpi RAG service."""
 

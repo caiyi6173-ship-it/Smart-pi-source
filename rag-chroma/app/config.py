@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     vector_backend: str = Field(default="local", pattern="^(local|qdrant|chroma)$")
     qdrant_url: str = "http://127.0.0.1:6333"
-    qdrant_collection: str = "smarttcm_tcm_knowledge"
+    qdrant_collection: str = "smartpi_tcm_knowledge"
     chroma_path: Path = Path("./data/chroma")
     local_vector_path: Path = Path("./data/local_vectors.json")
 

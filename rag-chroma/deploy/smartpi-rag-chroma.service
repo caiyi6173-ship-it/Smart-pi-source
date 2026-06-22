@@ -1,0 +1,18 @@
+[Unit]
+Description=smartpi RAG API (Chroma)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/smartpi/rag-chroma
+EnvironmentFile=/home/pi/smartpi/rag-chroma/.env
+ExecStart=/home/pi/smartpi/rag-chroma/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8095
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/pi/smartpi/data/results/rag_chroma_api.log
+StandardError=append:/home/pi/smartpi/data/results/rag_chroma_api.log
+
+[Install]
+WantedBy=multi-user.target

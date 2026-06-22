@@ -1,4 +1,4 @@
-﻿
+
 #!/usr/bin/env python3
 from __future__ import annotations
 
@@ -56,33 +56,33 @@ except Exception:
     WEBRTCVAD_READY = False
 
 PLACEHOLDER_RESULT = "暂无分析结果。"
-DEFAULT_WHISPER_INITIAL_PROMPT = "SmartTCM 舌象分析、摄像头识别、心率、血氧、皮肤温度、读取分析结果、重新分析。"
+DEFAULT_WHISPER_INITIAL_PROMPT = "smartpi 舌象分析、摄像头识别、心率、血氧、皮肤温度、读取分析结果、重新分析。"
 DEFAULT_WAKE_PROMPT = ""
 DEFAULT_DIRECT_LLM_SYSTEM_PROMPT = (
-    "你是 SmartTCM 的中文语音助手。"
-    "你运行在 SmartTCM 设备内部，能够触发 SmartTCM 已接入的摄像头、传感器和分析接口。"
+    "你是 smartpi 的中文语音助手。"
+    "你运行在 smartpi 设备内部，能够触发 smartpi 已接入的摄像头、传感器和分析接口。"
     "请优先自然、简洁地回答用户。"
-    "当用户明确是在控制 SmartTCM 设备或读取 SmartTCM 数据时，"
-    "你可以在回复最后单独追加一行动作标记，格式必须是 [[SMARTTCM_ACTION:动作名]]。"
+    "当用户明确是在控制 smartpi 设备或读取 smartpi 数据时，"
+    "你可以在回复最后单独追加一行动作标记，格式必须是 [[SMARTPI_ACTION:动作名]]。"
     "动作名只能从以下白名单中选择："
     "camera.start,camera.stop,sensor.temperature.start,sensor.temperature.stop,"
     "sensor.pulseox.start,sensor.pulseox.stop,telemetry.temperature.read,"
     "telemetry.pulseox.read,analysis.latest,analysis.trigger。"
     "如果只是闲聊、解释、安抚、普通问答，或者你不确定需要触发设备动作，就不要追加动作标记。"
     "不要说你无法访问摄像头、无法控制设备，也不要给出电脑或手机的通用操作教程。"
-    "示例：用户说“帮我把摄像头打开”，你可以回复“好的，这就为你打开摄像头识别。[[SMARTTCM_ACTION:camera.start]]”。"
-    "用户说“把摄像头关掉”，你可以回复“好的，已为你关闭摄像头识别。[[SMARTTCM_ACTION:camera.stop]]”。"
+    "示例：用户说“帮我把摄像头打开”，你可以回复“好的，这就为你打开摄像头识别。[[SMARTPI_ACTION:camera.start]]”。"
+    "用户说“把摄像头关掉”，你可以回复“好的，已为你关闭摄像头识别。[[SMARTPI_ACTION:camera.stop]]”。"
     "不要输出 Markdown，不要输出代码块。"
 )
 DEFAULT_MEMORY_SUMMARY_SYSTEM_PROMPT = (
-    "你是 SmartTCM 语音会话记忆压缩助手。"
+    "你是 smartpi 语音会话记忆压缩助手。"
     "请把用户与助手的旧对话压缩成后续继续聊天时有用的中文摘要。"
     "只保留用户背景、身体状态主诉、分析趋势、未解决问题和重要偏好。"
     "删除寒暄、重复表述和无意义废话。"
     "输出 3 到 6 句中文，不要使用列表、编号、Markdown。"
 )
 DEFAULT_REPLY_COMPRESSION_SYSTEM_PROMPT = (
-    "你是 SmartTCM 语音播报压缩助手。"
+    "你是 smartpi 语音播报压缩助手。"
     "请把一段较长中文回复压缩成适合语音播报的 1 到 2 句自然中文。"
     "保留核心结论和行动建议，不要使用编号、列表、Markdown，不要编造新事实。"
 )
@@ -175,7 +175,7 @@ def contains_any(text: str, phrases: tuple[str, ...]) -> bool:
     return any(phrase in text for phrase in phrases)
 
 
-ACTION_MARKER_RE = re.compile(r"\[\[SMARTTCM_ACTION:([a-zA-Z0-9._-]+)\]\]")
+ACTION_MARKER_RE = re.compile(r"\[\[SMARTPI_ACTION:([a-zA-Z0-9._-]+)\]\]")
 
 
 def split_command_parts(value: str) -> list[str]:
@@ -197,12 +197,12 @@ def command_exists(value: str) -> bool:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="SmartTCM voice agent with local STT/TTS and OpenClaw support")
+    parser = argparse.ArgumentParser(description="smartpi voice agent with local STT/TTS and OpenClaw support")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8093)
     parser.add_argument("--bridge-base-url", default="http://127.0.0.1:8092")
     parser.add_argument("--wake-word", default="小中医")
-    parser.add_argument("--assistant-name", default="SmartTCM Voice")
+    parser.add_argument("--assistant-name", default="smartpi Voice")
     parser.add_argument("--record-device", default="default")
     parser.add_argument("--playback-device", default="default")
     parser.add_argument("--record-seconds", type=float, default=3.0)
@@ -259,11 +259,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--piper-command", default=os.environ.get("PIPER_COMMAND", "piper"))
     parser.add_argument("--piper-model-path", default=os.environ.get("PIPER_MODEL_PATH", ""))
     parser.add_argument("--piper-config-path", default=os.environ.get("PIPER_CONFIG_PATH", ""))
-    parser.add_argument("--tts-cache-dir", default=os.environ.get("TTS_CACHE_DIR", "/home/pi/SmartTCM/cache/tts"))
+    parser.add_argument("--tts-cache-dir", default=os.environ.get("TTS_CACHE_DIR", "/home/pi/smartpi/cache/tts"))
     parser.add_argument("--enable-remote-tts", action="store_true")
     parser.add_argument("--remote-tts-base-url", default=os.environ.get("REMOTE_TTS_BASE_URL", ""))
     parser.add_argument("--remote-tts-model", default=os.environ.get("REMOTE_TTS_MODEL", "tts-1"))
-    parser.add_argument("--remote-tts-voice", default=os.environ.get("REMOTE_TTS_VOICE", "smarttcm"))
+    parser.add_argument("--remote-tts-voice", default=os.environ.get("REMOTE_TTS_VOICE", "smartpi"))
     parser.add_argument("--remote-tts-timeout-seconds", type=float, default=float(os.environ.get("REMOTE_TTS_TIMEOUT_SECONDS", "30")))
     parser.add_argument("--enable-direct-llm", action="store_true")
     parser.add_argument(
@@ -505,7 +505,7 @@ class VoiceAgent:
             return
         self.status = self.idle_status()
         self.updated_at = iso_now()
-        self.listener_thread = threading.Thread(target=self.wake_listen_loop, name="smarttcm-wake-listener", daemon=True)
+        self.listener_thread = threading.Thread(target=self.wake_listen_loop, name="smartpi-wake-listener", daemon=True)
         self.listener_thread.start()
 
     def wake_listen_loop(self) -> None:
@@ -772,7 +772,7 @@ class VoiceAgent:
                 str(request_payload.get("empty_reply", "已检测到唤醒词，但没有识别到后续命令。")),
                 request_payload.get("inline_command"),
             ),
-            name="smarttcm-pending-wake-capture",
+            name="smartpi-pending-wake-capture",
             daemon=True,
         )
         self.manual_capture_thread.start()
@@ -842,8 +842,8 @@ class VoiceAgent:
         model_files = self.locate_kws_model_files()
         model_dir = Path(self.args.kws_model_dir)
         tokens_type = self.resolve_kws_tokens_type(model_dir)
-        raw_keywords_path = model_dir / "smarttcm_keywords_raw.txt"
-        keywords_path = model_dir / "smarttcm_keywords.txt"
+        raw_keywords_path = model_dir / "smartpi_keywords_raw.txt"
+        keywords_path = model_dir / "smartpi_keywords.txt"
         aliases = self.iter_wake_words()
         raw_lines = [f"{alias} @{alias.replace(' ', '_')}" for alias in aliases]
         raw_keywords_path.write_text("\n".join(raw_lines) + "\n", encoding="utf-8")
@@ -887,7 +887,7 @@ class VoiceAgent:
             return False
 
         model_files = self.locate_kws_model_files()
-        keywords_path = Path(self.args.kws_model_dir) / "smarttcm_keywords.txt"
+        keywords_path = Path(self.args.kws_model_dir) / "smartpi_keywords.txt"
         command = [
             self.args.keyword_spotter_command,
             f"--encoder={model_files['encoder']}",
@@ -1111,7 +1111,7 @@ class VoiceAgent:
         self.manual_capture_thread = threading.Thread(
             target=self.capture_and_handle_post_wake_async,
             args=(speak_reply, "已手动唤醒，但没有识别到后续命令。"),
-            name="smarttcm-manual-capture",
+            name="smartpi-manual-capture",
             daemon=True,
         )
         self.manual_capture_thread.start()
@@ -1338,7 +1338,7 @@ class VoiceAgent:
         return None
 
     def execute_action(self, action: str) -> str:
-        # 具体动作通过 SmartTCM 边缘桥接服务执行，语音层不直接操作摄像头或 I2C 硬件。
+        # 具体动作通过 smartpi 边缘桥接服务执行，语音层不直接操作摄像头或 I2C 硬件。
         if action == "camera.start":
             self.bridge_post("/control/camera/start", {"profile": "low-latency"})
             return "已为你打开摄像头识别。"
@@ -1391,7 +1391,7 @@ class VoiceAgent:
             suffix = f"，分析编号 {analysis_id}" if analysis_id else ""
             return f"已重新触发一次分析{suffix}。"
 
-        return "当前命令未匹配到已支持的 SmartTCM 动作。"
+        return "当前命令未匹配到已支持的 smartpi 动作。"
 
     def invalidate_voice_context_cache(self) -> None:
         self.voice_context_cache = None
@@ -1712,7 +1712,7 @@ class VoiceAgent:
     def record_audio(self, duration_seconds: float) -> str:
         duration_seconds = clamp_record_seconds(duration_seconds)
         duration_seconds_int = max(1, int(math.ceil(duration_seconds)))
-        target = Path(tempfile.gettempdir()) / f"smarttcm_voice_{int(time.time() * 1000)}.wav"
+        target = Path(tempfile.gettempdir()) / f"smartpi_voice_{int(time.time() * 1000)}.wav"
         cmd = [
             "arecord",
             "-q",
@@ -1740,7 +1740,7 @@ class VoiceAgent:
         chunk_ms = self.args.vad_frame_ms if self.webrtcvad_enabled else 100
         sample_width = 2
         chunk_size = int(self.args.record_sample_rate * sample_width * chunk_ms / 1000)
-        target = Path(tempfile.gettempdir()) / f"smarttcm_voice_{int(time.time() * 1000)}.wav"
+        target = Path(tempfile.gettempdir()) / f"smartpi_voice_{int(time.time() * 1000)}.wav"
         command = [
             "arecord",
             "-q",
@@ -2024,7 +2024,7 @@ class VoiceAgent:
             raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "Piper 语音合成失败")
 
     def build_wake_tone_file(self) -> str:
-        target = Path(tempfile.gettempdir()) / "smarttcm_wake_tone.wav"
+        target = Path(tempfile.gettempdir()) / "smartpi_wake_tone.wav"
         if target.exists():
             return str(target)
 

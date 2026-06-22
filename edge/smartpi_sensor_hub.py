@@ -27,7 +27,7 @@ def iso_now() -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="SmartTCM sensor hub for AS6221 and MAX30102")
+    parser = argparse.ArgumentParser(description="smartpi sensor hub for AS6221 and MAX30102")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8091)
     parser.add_argument("--device-id", default="raspberrypi5-edge")

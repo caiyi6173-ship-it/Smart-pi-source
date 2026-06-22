@@ -3,7 +3,7 @@
 ## 顶层布局
 
 ```text
-SmartTCM-pi-source/
+Smart-pi-source/
   config/
   edge/
   openclaw/
@@ -37,13 +37,13 @@ GitHub 建议处理方式：
 
 ### `edge/`
 
-这是 SmartTCM 设备侧最核心的边缘控制层。
+这是 smartpi 设备侧最核心的边缘控制层。
 
 关键文件包括：
 
-- `smarttcm_voice_agent.py`
-- `smarttcm_edge_bridge.py`
-- `smarttcm_sensor_hub.py`
+- `smartpi_voice_agent.py`
+- `smartpi_edge_bridge.py`
+- `smartpi_sensor_hub.py`
 - `pi_mjpeg_stream_server.py`
 - `pi_usb_cam_edge_client.py`
 - `pi_run_*.sh`
@@ -59,10 +59,10 @@ GitHub 建议处理方式：
 关键内容包括：
 
 - `run_openclaw_message.sh`
-- `smarttcm-edge-control.md`
-- `skills/smarttcm-edge-control/SKILL.md`
+- `smartpi-edge-control.md`
+- `skills/smartpi-edge-control/SKILL.md`
 
-它用于说明 SmartTCM 如何调用 OpenClaw，以及项目侧技能如何组织。
+它用于说明 smartpi 如何调用 OpenClaw，以及项目侧技能如何组织。
 
 ### `openclaw-runtime/`
 
@@ -70,7 +70,7 @@ GitHub 建议处理方式：
 
 当前保留内容：
 
-- `skills/smarttcm-edge-control/SKILL.md`
+- `skills/smartpi-edge-control/SKILL.md`
 
 它适合用来对照“项目中的技能定义”和“运行时实际安装的技能内容”是否一致。
 
@@ -99,7 +99,7 @@ GitHub 建议处理方式：
 
 ### `rag-chroma/`
 
-SmartTCM 当前主用的 RAG 服务目录。
+smartpi 当前主用的 RAG 服务目录。
 
 典型子目录：
 
@@ -124,7 +124,7 @@ SmartTCM 当前主用的 RAG 服务目录。
 
 当前内容是混合态，既包括：
 
-- SmartTCM 相关兼容脚本
+- smartpi 相关兼容脚本
 - ONNX 推理辅助代码
 - 旧版 YOLO 实验代码
 

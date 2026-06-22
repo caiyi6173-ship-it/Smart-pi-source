@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="${1:-/home/pi/SmartTCM/rag}"
-SERVICE_NAME="smarttcm-rag.service"
+APP_DIR="${1:-/home/pi/smartpi/rag}"
+SERVICE_NAME="smartpi-rag.service"
 SERVICE_SRC="$APP_DIR/deploy/$SERVICE_NAME"
 SERVICE_DST="/etc/systemd/system/$SERVICE_NAME"
 
 mkdir -p "$APP_DIR/data/raw" "$APP_DIR/data/processed" "$APP_DIR/data/chroma" "$APP_DIR/data/qdrant"
-mkdir -p /home/pi/SmartTCM/data/results
+mkdir -p /home/pi/smartpi/data/results
 
 cd "$APP_DIR"
 

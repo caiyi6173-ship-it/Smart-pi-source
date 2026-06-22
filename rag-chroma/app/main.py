@@ -25,7 +25,7 @@ retrieval_service = RetrievalService(settings, embeddings, vector_store)
 ingest_service = IngestService(settings, embeddings, vector_store)
 answer_generator = AnswerGenerator(settings)
 
-app = FastAPI(title="SmartTCM RAG", version="0.1.0")
+app = FastAPI(title="smartpi RAG", version="0.1.0")
 
 
 @app.on_event("startup")

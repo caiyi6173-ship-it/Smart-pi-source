@@ -1,7 +1,7 @@
 services:
   qdrant:
     image: qdrant/qdrant:v1.18.2
-    container_name: smarttcm-rag-qdrant
+    container_name: smartpi-rag-qdrant
     restart: unless-stopped
     ports:
       - "6333:6333"
@@ -12,7 +12,7 @@ services:
   api:
     build:
       context: ..
-    container_name: smarttcm-rag-api
+    container_name: smartpi-rag-api
     restart: unless-stopped
     env_file:
       - ../.env

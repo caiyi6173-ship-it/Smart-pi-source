@@ -11,7 +11,7 @@ from app.retrieval.vector_store import create_vector_store
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Rebuild SmartTCM RAG index from a directory.")
+    parser = argparse.ArgumentParser(description="Rebuild smartpi RAG index from a directory.")
     parser.add_argument("--path", default="data/raw")
     parser.add_argument("--source-type", default="mixed")
     args = parser.parse_args()

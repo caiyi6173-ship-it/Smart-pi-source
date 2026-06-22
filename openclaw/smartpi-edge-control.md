@@ -1,6 +1,6 @@
-# smarttcm-edge-control
+# smartpi-edge-control
 
-This OpenClaw-facing skill calls the local SmartTCM edge bridge running on the Raspberry Pi.
+This OpenClaw-facing skill calls the local smartpi edge bridge running on the Raspberry Pi.
 
 ## Available actions
 
@@ -28,4 +28,4 @@ This OpenClaw-facing skill calls the local SmartTCM edge bridge running on the R
 ## Notes
 
 - OpenClaw acts as the orchestration brain, not the I2C or MJPEG worker.
-- SmartTCM keeps hardware access behind the local edge bridge so Plan A can run without OpenClaw.
+- smartpi keeps hardware access behind the local edge bridge so Plan A can run without OpenClaw.

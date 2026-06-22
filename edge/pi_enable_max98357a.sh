@@ -2,7 +2,7 @@
 set -euo pipefail
 
 CONFIG_FILE="/boot/firmware/config.txt"
-BACKUP_FILE="${CONFIG_FILE}.bak_smarttcm_$(date +%Y%m%d%H%M%S)"
+BACKUP_FILE="${CONFIG_FILE}.bak_smartpi_$(date +%Y%m%d%H%M%S)"
 OVERLAY_LINE="${I2S_OVERLAY_LINE:-dtoverlay=max98357a,no-sdmode}"
 
 if [[ ! -f "$CONFIG_FILE" ]]; then

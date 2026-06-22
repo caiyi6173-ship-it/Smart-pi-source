@@ -4,7 +4,7 @@ Imported from:
 
 https://github.com/xiaopangxia/TCM-Ancient-Books
 
-Initial SmartTCM RAG import subset:
+Initial smartpi RAG import subset:
 
 - 神农本草经
 - 八十一难经

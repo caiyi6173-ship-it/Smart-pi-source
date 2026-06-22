@@ -18,10 +18,10 @@ case "$PROFILE" in
     ;;
 esac
 
-exec /home/pi/SmartTCM/venv/bin/python /home/pi/SmartTCM/edge/pi_mjpeg_stream_server.py \
-  --weights /home/pi/SmartTCM/models/tongue_best.onnx \
+exec /home/pi/smartpi/venv/bin/python /home/pi/smartpi/edge/pi_mjpeg_stream_server.py \
+  --weights /home/pi/smartpi/models/tongue_best.onnx \
   --source "${SOURCE}" \
-  --class-map /home/pi/SmartTCM/config/class_map.json \
+  --class-map /home/pi/smartpi/config/class_map.json \
   --device cpu \
   --imgsz 640 \
   --jpeg-quality 65 \

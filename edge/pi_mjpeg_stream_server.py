@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 from __future__ import annotations
 
 import argparse
@@ -37,7 +37,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--camera-width", type=int, default=640)
     parser.add_argument("--camera-height", type=int, default=480)
     parser.add_argument("--camera-buffer-size", type=int, default=1)
-    parser.add_argument("--title", type=str, default="SmartTCM Live Detection")
+    parser.add_argument("--title", type=str, default="smartpi Live Detection")
     return parser
 
 
@@ -141,7 +141,7 @@ class MjpegDetectionServer:
   <div class="card">
     <h1>{outer.args.title}</h1>
     <p>Open <code>/stream</code> for MJPEG, <code>/snapshot</code> for one frame, <code>/health</code> for status, and <code>/detect</code> for one-shot image detection.</p>
-    <img src="/stream" alt="SmartTCM live detection stream">
+    <img src="/stream" alt="smartpi live detection stream">
   </div>
 </body>
 </html>"""
@@ -261,7 +261,7 @@ class MjpegDetectionServer:
                     self.wfile.write(payload)
 
         self.server = ThreadingHTTPServer((self.args.host, self.args.port), Handler)
-        print(f"SmartTCM MJPEG stream running on http://{self.args.host}:{self.args.port}", flush=True)
+        print(f"smartpi MJPEG stream running on http://{self.args.host}:{self.args.port}", flush=True)
         self.server.serve_forever()
 
     def _capture_loop(self) -> None:

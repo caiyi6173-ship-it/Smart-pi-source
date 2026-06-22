@@ -1,6 +1,6 @@
-# SmartTCM RAG
+# smartpi RAG
 
-独立的中医知识库 RAG 服务，默认运行在 `:8094`，可被 SmartTCM 语音助手或 OpenClaw 后续调用。
+独立的中医知识库 RAG 服务，默认运行在 `:8094`，可被 smartpi 语音助手或 OpenClaw 后续调用。
 
 工程支持三种向量后端：
 
@@ -11,7 +11,7 @@
 ## Quick Start
 
 ```powershell
-cd D:\RAG\smarttcm-rag
+cd D:\RAG\Smart-pi-source\rag-chroma
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt

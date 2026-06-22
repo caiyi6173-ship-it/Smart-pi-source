@@ -1,16 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-VENV_PYTHON="/home/pi/SmartTCM/venv/bin/python"
+VENV_PYTHON="/home/pi/smartpi/venv/bin/python"
 MODEL_NAME="${PIPER_VOICE_NAME:-zh_CN-huayan-medium}"
-MODEL_DIR="${PIPER_MODEL_DIR:-/home/pi/SmartTCM/models/piper}"
-CACHE_DIR="${TTS_CACHE_DIR:-/home/pi/SmartTCM/cache/tts}"
+MODEL_DIR="${PIPER_MODEL_DIR:-/home/pi/smartpi/models/piper}"
+CACHE_DIR="${TTS_CACHE_DIR:-/home/pi/smartpi/cache/tts}"
 WHISPER_MODEL="${FASTER_WHISPER_MODEL:-tiny}"
 HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
-HF_HOME="${HF_HOME:-/home/pi/SmartTCM/cache/huggingface}"
+HF_HOME="${HF_HOME:-/home/pi/smartpi/cache/huggingface}"
 PIPER_BASE_URL="${PIPER_DOWNLOAD_BASE_URL:-$HF_ENDPOINT/rhasspy/piper-voices/resolve/main}"
 KWS_MODEL_NAME="${SHERPA_KWS_MODEL_NAME:-sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01}"
-KWS_MODEL_PARENT="${SHERPA_KWS_MODEL_PARENT:-/home/pi/SmartTCM/models/kws}"
+KWS_MODEL_PARENT="${SHERPA_KWS_MODEL_PARENT:-/home/pi/smartpi/models/kws}"
 KWS_MODEL_DIR="${SHERPA_KWS_MODEL_DIR:-$KWS_MODEL_PARENT/$KWS_MODEL_NAME}"
 KWS_DOWNLOAD_URL="${SHERPA_KWS_DOWNLOAD_URL:-https://github.com/k2-fsa/sherpa-onnx/releases/download/kws-models/${KWS_MODEL_NAME}.tar.bz2}"
 
@@ -54,7 +54,7 @@ from faster_whisper import WhisperModel
 
 model_name = os.environ.get("FASTER_WHISPER_MODEL", "base")
 compute_type = os.environ.get("FASTER_WHISPER_COMPUTE_TYPE", "int8")
-hf_home = os.environ.get("HF_HOME", "/home/pi/SmartTCM/cache/huggingface")
+hf_home = os.environ.get("HF_HOME", "/home/pi/smartpi/cache/huggingface")
 WhisperModel(model_name, device="cpu", compute_type=compute_type, download_root=hf_home)
 print(f"Downloaded faster-whisper model: {model_name}")
 PY
@@ -69,19 +69,19 @@ fi
 
 cat <<EOF
 Local voice stack installation completed.
-Recommended values in /home/pi/SmartTCM/config/voice_agent.env:
+Recommended values in /home/pi/smartpi/config/voice_agent.env:
 ENABLE_LOCAL_STT=1
 ENABLE_LOCAL_TTS=1
 ENABLE_WEBRTCVAD=1
 HF_ENDPOINT=$HF_ENDPOINT
 HF_HOME=$HF_HOME
-PIPER_COMMAND=/home/pi/SmartTCM/venv/bin/python -m piper
+PIPER_COMMAND=/home/pi/smartpi/venv/bin/python -m piper
 PIPER_MODEL_PATH=$MODEL_DIR/${MODEL_NAME}.onnx
 PIPER_CONFIG_PATH=$MODEL_DIR/${MODEL_NAME}.onnx.json
 TTS_CACHE_DIR=$CACHE_DIR
 ENABLE_KEYWORD_SPOTTER=1
-SHERPA_KWS_COMMAND=/home/pi/SmartTCM/venv/bin/sherpa-onnx-keyword-spotter
-SHERPA_KWS_CLI=/home/pi/SmartTCM/venv/bin/sherpa-onnx-cli
+SHERPA_KWS_COMMAND=/home/pi/smartpi/venv/bin/sherpa-onnx-keyword-spotter
+SHERPA_KWS_CLI=/home/pi/smartpi/venv/bin/sherpa-onnx-cli
 SHERPA_KWS_MODEL_DIR=$KWS_MODEL_DIR
 SHERPA_KWS_TOKENS_TYPE=${SHERPA_KWS_TOKENS_TYPE:-}
 SHERPA_KWS_KEYWORDS_THRESHOLD=${SHERPA_KWS_KEYWORDS_THRESHOLD:-0.35}
@@ -89,5 +89,5 @@ SHERPA_KWS_KEYWORDS_SCORE=${SHERPA_KWS_KEYWORDS_SCORE:-1.8}
 SHERPA_KWS_NUM_THREADS=${SHERPA_KWS_NUM_THREADS:-2}
 
 Then restart:
-sudo systemctl restart smarttcm-voice-agent.service
+sudo systemctl restart smartpi-voice-agent.service
 EOF

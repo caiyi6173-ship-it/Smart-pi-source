@@ -1,0 +1,18 @@
+[Unit]
+Description=smartpi Raspberry Pi Edge Bridge
+After=network-online.target smartpi-edge-stream.service smartpi-sensor-hub.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/smartpi
+EnvironmentFile=-/home/pi/smartpi/config/edge_bridge.env
+ExecStart=/home/pi/smartpi/edge/pi_run_edge_bridge.sh
+Restart=always
+RestartSec=3
+StandardOutput=append:/home/pi/smartpi/data/results/edge_bridge.log
+StandardError=append:/home/pi/smartpi/data/results/edge_bridge.log
+
+[Install]
+WantedBy=multi-user.target

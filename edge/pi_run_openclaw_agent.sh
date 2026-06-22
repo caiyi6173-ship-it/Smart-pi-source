@@ -8,7 +8,7 @@ if [[ -z "$MESSAGE" ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-OPENCLAW_WORKSPACE="/home/pi/SmartTCM/openclaw"
+OPENCLAW_WORKSPACE="/home/pi/smartpi/openclaw"
 if [[ -d "$OPENCLAW_WORKSPACE" ]]; then
   cd "$OPENCLAW_WORKSPACE"
 else
@@ -16,10 +16,10 @@ else
 fi
 
 PROMPT=$(cat <<EOF
-You are SmartTCM's conversational edge assistant.
-Prefer using the installed skill smarttcm-edge-control.
+You are smartpi's conversational edge assistant.
+Prefer using the installed skill smartpi-edge-control.
 When an edge action is needed, append one marker line at the end:
-[[SMARTTCM_ACTION:camera.start]]
+[[SMARTPI_ACTION:camera.start]]
 For chat requests, respond naturally without marker.
 Return plain text only.
 

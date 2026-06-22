@@ -1,0 +1,18 @@
+[Unit]
+Description=smartpi Raspberry Pi Voice Agent
+After=network-online.target smartpi-edge-bridge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/smartpi
+EnvironmentFile=-/home/pi/smartpi/config/voice_agent.env
+ExecStart=/home/pi/smartpi/edge/pi_run_voice_agent.sh
+Restart=always
+RestartSec=3
+StandardOutput=append:/home/pi/smartpi/data/results/voice_agent.log
+StandardError=append:/home/pi/smartpi/data/results/voice_agent.log
+
+[Install]
+WantedBy=multi-user.target

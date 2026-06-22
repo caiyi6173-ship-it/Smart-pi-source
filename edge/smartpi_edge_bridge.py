@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 from __future__ import annotations
 
 import argparse
@@ -17,7 +17,7 @@ def iso_now() -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="SmartTCM local edge bridge for OpenClaw and voice control")
+    parser = argparse.ArgumentParser(description="smartpi local edge bridge for OpenClaw and voice control")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8092)
     parser.add_argument("--backend-base-url", default="http://192.168.137.1:18080")
@@ -26,10 +26,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--voice-base-url", default="http://127.0.0.1:8093")
     parser.add_argument("--device-id", default="raspberrypi5-edge")
     parser.add_argument("--user-id", default="front_dashboard_user")
-    parser.add_argument("--camera-start-script", default="/home/pi/SmartTCM/edge/pi_start_mjpeg_stream.sh")
-    parser.add_argument("--camera-stop-script", default="/home/pi/SmartTCM/edge/pi_stop_mjpeg_stream.sh")
-    parser.add_argument("--voice-service-name", default="smarttcm-voice-agent.service")
-    parser.add_argument("--voice-env-path", default="/home/pi/SmartTCM/config/voice_agent.env")
+    parser.add_argument("--camera-start-script", default="/home/pi/smartpi/edge/pi_start_mjpeg_stream.sh")
+    parser.add_argument("--camera-stop-script", default="/home/pi/smartpi/edge/pi_stop_mjpeg_stream.sh")
+    parser.add_argument("--voice-service-name", default="smartpi-voice-agent.service")
+    parser.add_argument("--voice-env-path", default="/home/pi/smartpi/config/voice_agent.env")
     return parser
 
 
@@ -374,7 +374,7 @@ class EdgeBridge:
         return payload
 
     def submit_analysis(self, payload: dict[str, Any], image_bytes: bytes | None) -> dict[str, Any]:
-        boundary = f"----SmartTCMEdgeBridge{int(datetime.now().timestamp() * 1000)}"
+        boundary = f"----smartpiEdgeBridge{int(datetime.now().timestamp() * 1000)}"
         body = bytearray()
         body.extend(self.multipart_text(boundary, "payload", json.dumps(payload, ensure_ascii=False)))
         if image_bytes:

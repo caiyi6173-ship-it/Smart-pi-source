@@ -9,7 +9,7 @@ from pathlib import Path
 
 def build_parser() -> argparse.ArgumentParser:
     repo_root = Path(__file__).resolve().parents[2]
-    parser = argparse.ArgumentParser(description="Run ONNX inference and emit SmartTCM edge payload JSON")
+    parser = argparse.ArgumentParser(description="Run ONNX inference and emit smartpi edge payload JSON")
     parser.add_argument("--weights", type=Path, required=True, help="Path to exported ONNX model")
     parser.add_argument("--source", type=Path, required=True, help="Path to source image")
     parser.add_argument("--class-map", type=Path, default=repo_root / "training" / "config" / "class_map.json")

@@ -1,5 +1,5 @@
 #!/bin/bash
 set -euo pipefail
 
-sudo systemctl stop smarttcm-edge-stream.service
-sudo systemctl --no-pager --full status smarttcm-edge-stream.service || true
+sudo systemctl stop smartpi-edge-stream.service
+sudo systemctl --no-pager --full status smartpi-edge-stream.service || true

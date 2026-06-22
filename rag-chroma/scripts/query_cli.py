@@ -11,7 +11,7 @@ import httpx
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Query SmartTCM RAG API.")
+    parser = argparse.ArgumentParser(description="Query smartpi RAG API.")
     parser.add_argument("question")
     parser.add_argument("--url", default="http://127.0.0.1:8094")
     parser.add_argument("--top-k", type=int, default=8)

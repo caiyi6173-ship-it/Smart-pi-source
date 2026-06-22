@@ -45,8 +45,8 @@ piper_command_path() {
     return
   fi
 
-  if [[ -x "/home/pi/SmartTCM/venv/bin/python" ]]; then
-    printf '%s\n' '/home/pi/SmartTCM/venv/bin/python -m piper'
+  if [[ -x "/home/pi/smartpi/venv/bin/python" ]]; then
+    printf '%s\n' '/home/pi/smartpi/venv/bin/python -m piper'
     return
   fi
 
@@ -58,13 +58,13 @@ PLAYBACK_DEVICE_RESOLVED="$(resolve_playback_device)"
 PIPER_COMMAND_RESOLVED="$(piper_command_path)"
 
 export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
-export HF_HOME="${HF_HOME:-/home/pi/SmartTCM/cache/huggingface}"
-mkdir -p "${HF_HOME}" "${TTS_CACHE_DIR:-/home/pi/SmartTCM/cache/tts}"
+export HF_HOME="${HF_HOME:-/home/pi/smartpi/cache/huggingface}"
+mkdir -p "${HF_HOME}" "${TTS_CACHE_DIR:-/home/pi/smartpi/cache/tts}"
 
 ARGS=(
   --bridge-base-url "${BRIDGE_BASE_URL:-http://127.0.0.1:8092}"
   --wake-word "${WAKE_WORD:-小中医}"
-  --assistant-name "${ASSISTANT_NAME:-SmartTCM Voice}"
+  --assistant-name "${ASSISTANT_NAME:-smartpi Voice}"
   --record-device "${RECORD_DEVICE_RESOLVED}"
   --playback-device "${PLAYBACK_DEVICE_RESOLVED}"
   --record-seconds "${RECORD_SECONDS:-3}"
@@ -73,7 +73,7 @@ ARGS=(
   --whisper-device "${FASTER_WHISPER_DEVICE:-cpu}"
   --whisper-compute-type "${FASTER_WHISPER_COMPUTE_TYPE:-int8}"
   --whisper-language "${FASTER_WHISPER_LANGUAGE:-zh}"
-  --whisper-initial-prompt "${FASTER_WHISPER_INITIAL_PROMPT:-SmartTCM 舌象分析、摄像头识别、心率、血氧、皮肤温度、读取分析结果、重新分析。}"
+  --whisper-initial-prompt "${FASTER_WHISPER_INITIAL_PROMPT:-smartpi 舌象分析、摄像头识别、心率、血氧、皮肤温度、读取分析结果、重新分析。}"
   --wake-whisper-model "${FASTER_WHISPER_WAKE_MODEL:-tiny}"
   --wake-whisper-compute-type "${FASTER_WHISPER_WAKE_COMPUTE_TYPE:-int8}"
   --wake-whisper-initial-prompt "${FASTER_WHISPER_WAKE_INITIAL_PROMPT:-}"
@@ -97,7 +97,7 @@ ARGS=(
   --tts-voice "${DASHSCOPE_TTS_VOICE:-longxiaochun_v2}"
   --remote-tts-base-url "${REMOTE_TTS_BASE_URL:-}"
   --remote-tts-model "${REMOTE_TTS_MODEL:-tts-1}"
-  --remote-tts-voice "${REMOTE_TTS_VOICE:-smarttcm}"
+  --remote-tts-voice "${REMOTE_TTS_VOICE:-smartpi}"
   --remote-tts-timeout-seconds "${REMOTE_TTS_TIMEOUT_SECONDS:-30}"
   --llm-base-url "${DIRECT_LLM_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions}"
   --llm-api-key "${DIRECT_LLM_API_KEY:-${DASHSCOPE_API_KEY:-}}"
@@ -108,7 +108,7 @@ ARGS=(
   --piper-command "${PIPER_COMMAND_RESOLVED}"
   --piper-model-path "${PIPER_MODEL_PATH:-}"
   --piper-config-path "${PIPER_CONFIG_PATH:-}"
-  --tts-cache-dir "${TTS_CACHE_DIR:-/home/pi/SmartTCM/cache/tts}"
+  --tts-cache-dir "${TTS_CACHE_DIR:-/home/pi/smartpi/cache/tts}"
   --keyword-spotter-command "${SHERPA_KWS_COMMAND:-sherpa-onnx-keyword-spotter}"
   --keyword-spotter-cli-command "${SHERPA_KWS_CLI:-sherpa-onnx-cli}"
   --kws-model-dir "${SHERPA_KWS_MODEL_DIR:-}"
@@ -157,4 +157,4 @@ if [[ "${ENABLE_OPENCLAW:-0}" == "1" ]]; then
   ARGS+=(--enable-openclaw)
 fi
 
-exec /home/pi/SmartTCM/venv/bin/python /home/pi/SmartTCM/edge/smarttcm_voice_agent.py "${ARGS[@]}"
+exec /home/pi/smartpi/venv/bin/python /home/pi/smartpi/edge/smartpi_voice_agent.py "${ARGS[@]}"

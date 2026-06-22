@@ -11,7 +11,7 @@ def build_rag_messages(question: str, chunks: list[Chunk], user_context: dict | 
     )
     context_text = f"\n用户上下文：{user_context}" if user_context else ""
     system = (
-        "你是 SmartTCM 的中医知识库问答助手。"
+        "你是 smartpi 的中医知识库问答助手。"
         "只能基于给定资料回答，不要编造来源。"
         "回答要清晰、谨慎、可追溯，并在最后加入医疗安全提示。"
         "如果资料不足，请明确说明知识库未找到可靠依据。"

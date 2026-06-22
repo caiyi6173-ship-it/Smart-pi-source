@@ -105,7 +105,7 @@ class AliyunOssMediaUploader(MediaUploader):
 def build_parser() -> argparse.ArgumentParser:
     repo_root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(
-        description="Capture one frame from a Raspberry Pi USB camera, run tongue inference, and optionally upload to SmartTCM backend."
+        description="Capture one frame from a Raspberry Pi USB camera, run tongue inference, and optionally upload to smartpi backend."
     )
     parser.add_argument("--weights", type=Path, required=True, help="Path to .pt or .onnx detector")
     parser.add_argument("--source", type=str, default="0", help="Camera index (e.g. 0) or image path")
@@ -128,7 +128,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--media-upload-mode", choices=["none", "aliyun-oss"], default="none", help="Optional cloud media upload mode")
     parser.add_argument("--oss-endpoint", type=str, default=None, help="Aliyun OSS endpoint host or full URL")
     parser.add_argument("--oss-bucket", type=str, default=None, help="Aliyun OSS bucket name")
-    parser.add_argument("--oss-prefix", type=str, default="smarttcm/edge", help="Object key prefix under bucket")
+    parser.add_argument("--oss-prefix", type=str, default="smartpi/edge", help="Object key prefix under bucket")
     parser.add_argument("--oss-region", type=str, default=None, help="Aliyun OSS region")
     parser.add_argument("--oss-auth-mode", choices=["presigned", "sts"], default="presigned", help="Aliyun OSS upload auth mode")
     parser.add_argument("--media-public-base-url", type=str, default=None, help="Optional public URL base for uploaded cloud images")

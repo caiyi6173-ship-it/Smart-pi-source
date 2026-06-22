@@ -11,7 +11,7 @@ from app.retrieval.vector_store import create_vector_store
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Index documents into SmartTCM RAG.")
+    parser = argparse.ArgumentParser(description="Index documents into smartpi RAG.")
     parser.add_argument("path", help="File or directory to ingest")
     parser.add_argument("--source-type", default="mixed")
     parser.add_argument("--tag", action="append", default=[])

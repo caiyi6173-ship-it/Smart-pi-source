@@ -2,8 +2,8 @@
 set -euo pipefail
 
 PROFILE="${1:-low-latency}"
-SERVICE_NAME="smarttcm-edge-stream.service"
-START_SCRIPT="/home/pi/SmartTCM/edge/pi_start_mjpeg_stream.sh"
+SERVICE_NAME="smartpi-edge-stream.service"
+START_SCRIPT="/home/pi/smartpi/edge/pi_start_mjpeg_stream.sh"
 
 echo "Restarting ${SERVICE_NAME} with profile: ${PROFILE}"
 
