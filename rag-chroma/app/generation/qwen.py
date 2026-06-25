@@ -1,4 +1,5 @@
 import logging
+import re
 
 from openai import OpenAI
 
@@ -29,7 +30,7 @@ class AnswerGenerator:
             return f"知识库未找到与“{question}”直接相关且达到可信阈值的依据，因此不生成推断性回答。\n\n{SAFETY_NOTICE}"
 
         if not self._client:
-            snippets = "\n".join(f"- {chunk.text[:180]}" for chunk in chunks[:3])
+            snippets = "\n".join(f"- [{idx}] {chunk.text[:180]}" for idx, chunk in enumerate(chunks[:3], start=1))
             return f"开发模式占位回答：已检索到以下资料片段，可据此接入 Qwen3-max 生成正式回答。\n{snippets}\n\n{SAFETY_NOTICE}"
 
         try:
@@ -41,8 +42,19 @@ class AnswerGenerator:
             answer = response.choices[0].message.content or ""
         except Exception as exc:
             logger.warning("LLM API failed, falling back to offline placeholder answer: %s", exc)
-            snippets = "\n".join(f"- {chunk.text[:180]}" for chunk in chunks[:3])
+            snippets = "\n".join(f"- [{idx}] {chunk.text[:180]}" for idx, chunk in enumerate(chunks[:3], start=1))
             answer = f"开发模式占位回答：在线大模型当前不可用，以下是已检索到的相关资料片段，可先用于人工核对。\n{snippets}"
+        answer = _ensure_citation_markers(answer, chunks)
         if SAFETY_NOTICE not in answer:
             answer = f"{answer.rstrip()}\n\n{SAFETY_NOTICE}"
         return answer
+
+
+def _ensure_citation_markers(answer: str, chunks: list[Chunk]) -> str:
+    if not chunks or re.search(r"\[\d+\]", answer):
+        return answer
+    titles = []
+    for idx, chunk in enumerate(chunks[:3], start=1):
+        title = chunk.metadata.get("title", "未知来源")
+        titles.append(f"[{idx}] {title}")
+    return f"{answer.rstrip()}\n\n引用来源：{'; '.join(titles)}"

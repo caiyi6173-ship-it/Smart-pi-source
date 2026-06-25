@@ -1,3 +1,5 @@
+import re
+
 from app.schemas import Chunk
 from app.retrieval.routing import route_metadata_boost
 from app.retrieval.text import keyword_overlap_score
@@ -41,12 +43,14 @@ def local_rerank(question: str, chunks: list[Chunk], top_k: int) -> list[Chunk]:
         title_overlap = keyword_overlap_score(question, chunk.metadata.get("title", ""))
         source_overlap = keyword_overlap_score(question, chunk.metadata.get("source_id", ""))
         intent_boost = _intent_metadata_boost(question, chunk)
+        exact_title_boost = _exact_title_boost(question, chunk)
         rerank_score = (
-            0.38 * vector_score
-            + 0.28 * lexical_score
-            + 0.14 * overlap
-            + 0.12 * max(title_overlap, source_overlap)
+            0.34 * vector_score
+            + 0.25 * lexical_score
+            + 0.12 * overlap
+            + 0.11 * max(title_overlap, source_overlap)
             + 0.08 * intent_boost
+            + 0.10 * exact_title_boost
         )
         updated = chunk.model_copy(deep=True)
         updated.rerank_score = rerank_score
@@ -80,3 +84,22 @@ def _source_label(chunk: Chunk) -> str:
 def _intent_metadata_boost(question: str, chunk: Chunk) -> float:
     source_type = chunk.metadata.get("source_type", "")
     return route_metadata_boost(question, source_type)
+
+
+def _exact_title_boost(question: str, chunk: Chunk) -> float:
+    normalized_question = _compact_text(question)
+    candidates = [
+        chunk.metadata.get("title", ""),
+        chunk.metadata.get("source_id", ""),
+    ]
+    for candidate in candidates:
+        normalized_candidate = _compact_text(str(candidate))
+        normalized_candidate = re.sub(r"^[0-9]+[-_]", "", normalized_candidate)
+        normalized_candidate = re.sub(r"\.(txt|md|markdown|pdf|docx|html?)$", "", normalized_candidate)
+        if len(normalized_candidate) >= 2 and normalized_candidate in normalized_question:
+            return 1.0
+    return 0.0
+
+
+def _compact_text(text: str) -> str:
+    return re.sub(r"\s+", "", text.lower())

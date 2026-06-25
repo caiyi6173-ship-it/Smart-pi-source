@@ -82,7 +82,8 @@ def _resolve_source_type(path: Path, source_type: str) -> str:
     stem = path.stem.lower()
 
     if "modern_basics" in parts:
-        if any(keyword in stem for keyword in ("安全", "禁忌", "辨别", "儿童", "孕产", "慢病", "老年")):
+        safety_keywords = ("安全", "禁忌", "辨别", "儿童", "孕产", "慢病", "老年")
+        if any(keyword in stem for keyword in safety_keywords):
             return "safety_rule"
         return "modern_basics"
 

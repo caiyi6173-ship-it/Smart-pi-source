@@ -128,6 +128,8 @@ flowchart LR
 
 ## 快速开始
 
+树莓派运行时总控规则见 `deploy/PI_RUNTIME_RULES.md`。
+
 ### 1. 本地查看与开发 RAG
 
 适合先在 Windows 上验证知识库导入、检索和 API：
@@ -266,6 +268,24 @@ sudo systemctl start smartpi-rag.service
 - 本项目中的 RAG 回答仅供中医知识参考，不能替代医生诊断。
 - 涉及急症、孕产、儿童、严重慢病、药物冲突等情况时，应优先建议线下就医。
 - 请不要将真实密钥、`.env`、模型权重、日志、缓存和采集媒体直接提交到仓库。
+
+## Agent Orchestrator
+
+`agent-orchestrator/` 用于把安全分诊、意图路由、RAG 检索、舌象标签解释、设备动作 dry-run 和最终回答合成为一条可测试的 Agent 工作流。
+
+语音助手默认不启用旁路 Agent。需要测试时，在语音助手配置中设置：
+
+```env
+ENABLE_AGENT_ORCHESTRATOR=1
+AGENT_ORCHESTRATOR_URL=http://127.0.0.1:8096
+AGENT_ORCHESTRATOR_TIMEOUT_SECONDS=30
+```
+
+设备动作仍默认 dry-run，不会直接执行硬件动作。Windows 本地可用下面脚本测试 Agent API：
+
+```powershell
+.\scripts\smoke_voice_agent_orchestrator.ps1 -Message "舌苔黄腻说明什么？"
+```
 
 ## 后续方向
 

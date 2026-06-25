@@ -37,12 +37,17 @@ class EmbeddingClient:
             return [self._fake_embedding(text) for text in texts]
 
         try:
-            response = self._client.embeddings.create(
-                model=self.settings.embedding_model,
-                input=texts,
-                dimensions=self.settings.embedding_dimensions,
-            )
-            return [item.embedding for item in response.data]
+            embeddings: list[list[float]] = []
+            batch_size = max(1, min(self.settings.embedding_batch_size, 20))
+            for start in range(0, len(texts), batch_size):
+                batch = texts[start : start + batch_size]
+                response = self._client.embeddings.create(
+                    model=self.settings.embedding_model,
+                    input=batch,
+                    dimensions=self.settings.embedding_dimensions,
+                )
+                embeddings.extend(item.embedding for item in response.data)
+            return embeddings
         except Exception as exc:
             self._runtime_fallback = True
             logger.warning("Embedding API failed, falling back to local deterministic embeddings: %s", exc)

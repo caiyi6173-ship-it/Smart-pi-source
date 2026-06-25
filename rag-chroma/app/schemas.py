@@ -28,13 +28,21 @@ class Chunk(BaseModel):
 
 
 class Citation(BaseModel):
+    index: int = Field(ge=1)
     title: str
     source_id: str
+    source_type: str = "mixed"
     document_id: str
     chunk_id: str
+    path: str | None = None
     page: int | None = None
     section: str | None = None
     score: float | None = None
+    vector_score: float | None = None
+    lexical_score: float | None = None
+    rerank_score: float | None = None
+    retrieval_source: str | None = None
+    excerpt: str | None = None
 
 
 class IngestRequest(BaseModel):
@@ -67,6 +75,8 @@ class QueryResponse(BaseModel):
     retrieval_strategy: str = "hybrid"
     rerank_provider: str = "none"
     no_answer: bool = False
+    evidence_status: Literal["supported", "insufficient_evidence"] = "supported"
+    evidence_count: int = 0
     model: str
     latency_ms: int
 

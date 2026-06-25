@@ -1,5 +1,7 @@
 # 树莓派部署指南
 
+运行时总控规则见 `deploy/PI_RUNTIME_RULES.md`。部署时优先以该文件作为服务端口、启动顺序、RAG 重建和健康检查的总入口。
+
 本文档面向 `smartpi` 的树莓派部署，目标是把仓库中的主链路服务在 Raspberry Pi 上跑起来，包括：
 
 - 摄像头检测流
@@ -357,6 +359,33 @@ ss -ltnp
 - `ENABLE_OPENCLAW=1`
 - `OPENCLAW_COMMAND` 是否正确
 - `smartpi-edge-control` skill 是否已安装
+
+### 5. Agent Orchestrator 旁路接入
+
+建议先以旁路模式启用 Agent Orchestrator，不直接替换原语音助手主链路。
+
+语音助手配置示例：
+
+```env
+ENABLE_AGENT_ORCHESTRATOR=1
+AGENT_ORCHESTRATOR_URL=http://127.0.0.1:8096
+AGENT_ORCHESTRATOR_TIMEOUT_SECONDS=30
+```
+
+旁路逻辑：
+
+```text
+语音识别文本
+  -> Agent Orchestrator /api/v1/agent/chat
+  -> 成功则播报 Agent answer
+  -> 失败则回退原有本地快路径、Direct LLM 或 OpenClaw
+```
+
+注意：
+
+- 默认 `ENABLE_AGENT_ORCHESTRATOR=0`，不会影响原语音助手。
+- DeviceControlAgent 默认 `DEVICE_DRY_RUN=true`，只返回动作计划，不执行硬件。
+- 真正允许硬件执行前，应先在树莓派上完成人工验证和日志审计。
 
 ## 15. 安全提醒
 

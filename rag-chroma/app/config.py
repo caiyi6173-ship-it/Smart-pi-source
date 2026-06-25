@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     dashscope_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     embedding_model: str = "text-embedding-v4"
     embedding_dimensions: int = 1024
+    embedding_batch_size: int = Field(default=10, ge=1, le=20)
     llm_model: str = "qwen3-max"
 
     vector_backend: str = Field(default="local", pattern="^(local|qdrant|chroma)$")

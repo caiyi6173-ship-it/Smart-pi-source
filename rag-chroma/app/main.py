@@ -72,18 +72,7 @@ def query(request: QueryRequest) -> QueryResponse:
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    citations = [
-        Citation(
-            title=chunk.metadata.get("title", "未知来源"),
-            source_id=chunk.metadata.get("source_id", ""),
-            document_id=chunk.document_id,
-            chunk_id=chunk.id,
-            page=chunk.metadata.get("page"),
-            section=chunk.metadata.get("section"),
-            score=chunk.score,
-        )
-        for chunk in chunks
-    ]
+    citations = _build_citations(chunks)
     return QueryResponse(
         answer=answer,
         citations=citations,
@@ -92,6 +81,8 @@ def query(request: QueryRequest) -> QueryResponse:
         retrieval_strategy=retrieval.strategy,
         rerank_provider=retrieval.rerank_provider,
         no_answer=not bool(chunks),
+        evidence_status="supported" if chunks else "insufficient_evidence",
+        evidence_count=len(chunks),
         model=settings.llm_model if answer_generator.configured else "offline-dev",
         latency_ms=int((time.perf_counter() - start) * 1000),
     )
@@ -127,3 +118,35 @@ def delete_document(document_id: str):
         return {"document_id": document_id, "status": "deleted"}
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+def _build_citations(chunks) -> list[Citation]:
+    citations: list[Citation] = []
+    for index, chunk in enumerate(chunks, start=1):
+        citations.append(
+            Citation(
+                index=index,
+                title=chunk.metadata.get("title", "未知来源"),
+                source_id=chunk.metadata.get("source_id", ""),
+                source_type=chunk.metadata.get("source_type", "mixed"),
+                document_id=chunk.document_id,
+                chunk_id=chunk.id,
+                path=chunk.metadata.get("path"),
+                page=chunk.metadata.get("page"),
+                section=chunk.metadata.get("section"),
+                score=chunk.score,
+                vector_score=chunk.vector_score,
+                lexical_score=chunk.lexical_score,
+                rerank_score=chunk.rerank_score,
+                retrieval_source=chunk.retrieval_source,
+                excerpt=_excerpt(chunk.text),
+            )
+        )
+    return citations
+
+
+def _excerpt(text: str, max_chars: int = 180) -> str:
+    compact = " ".join(text.split())
+    if len(compact) <= max_chars:
+        return compact
+    return f"{compact[:max_chars].rstrip()}..."

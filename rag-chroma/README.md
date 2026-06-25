@@ -83,6 +83,16 @@ python scripts\query_cli.py "舌苔黄腻说明什么"
 
 The retrieval layer now supports query rewrite, vector recall, BM25 lexical recall, reciprocal rank fusion, DashScope `qwen3-rerank` cloud reranking with local fallback, metadata filters, relevance thresholding, and no-answer abstention. See `docs/retrieval_pipeline.md`.
 
+## Trusted RAG
+
+The query API now returns traceable evidence packs with citation indexes, source metadata, retrieval scores, excerpts, and explicit `evidence_status`. See `docs/trusted_rag.md`.
+
+## Evaluation
+
+`evals/` provides an OpenAI-compatible evaluation workflow for generating grounded QA samples, wrong answers, distractors, rubrics, RAG run reports, and LLM-judged quality reports.
+
+Start here: `evals/README.md`.
+
 ## Notes
 
 - 没有配置 `DASHSCOPE_API_KEY` 时，服务会使用确定性的本地假向量和抽取式占位回答，便于开发和测试，但不能用于正式 RAG 效果评估。

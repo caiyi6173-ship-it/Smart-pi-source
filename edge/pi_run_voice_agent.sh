@@ -1,6 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT}/venv/bin/python}"
+if [[ ! -x "${PYTHON_BIN}" ]]; then
+  PYTHON_BIN="$(command -v python3 || command -v python)"
+fi
+
 resolve_record_device() {
   if [[ -n "${RECORD_DEVICE:-}" && "${RECORD_DEVICE}" != "default" ]]; then
     printf '%s\n' "${RECORD_DEVICE}"
@@ -45,8 +52,8 @@ piper_command_path() {
     return
   fi
 
-  if [[ -x "/home/pi/smartpi/venv/bin/python" ]]; then
-    printf '%s\n' '/home/pi/smartpi/venv/bin/python -m piper'
+  if [[ -x "${PYTHON_BIN}" ]]; then
+    printf '%s\n' "${PYTHON_BIN} -m piper"
     return
   fi
 
@@ -58,12 +65,12 @@ PLAYBACK_DEVICE_RESOLVED="$(resolve_playback_device)"
 PIPER_COMMAND_RESOLVED="$(piper_command_path)"
 
 export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
-export HF_HOME="${HF_HOME:-/home/pi/smartpi/cache/huggingface}"
-mkdir -p "${HF_HOME}" "${TTS_CACHE_DIR:-/home/pi/smartpi/cache/tts}"
+export HF_HOME="${HF_HOME:-${PROJECT_ROOT}/cache/huggingface}"
+mkdir -p "${HF_HOME}" "${TTS_CACHE_DIR:-${PROJECT_ROOT}/cache/tts}"
 
 ARGS=(
   --bridge-base-url "${BRIDGE_BASE_URL:-http://127.0.0.1:8092}"
-  --wake-word "${WAKE_WORD:-小中医}"
+  --wake-word "${WAKE_WORD:-你好小智}"
   --assistant-name "${ASSISTANT_NAME:-smartpi Voice}"
   --record-device "${RECORD_DEVICE_RESOLVED}"
   --playback-device "${PLAYBACK_DEVICE_RESOLVED}"
@@ -108,7 +115,7 @@ ARGS=(
   --piper-command "${PIPER_COMMAND_RESOLVED}"
   --piper-model-path "${PIPER_MODEL_PATH:-}"
   --piper-config-path "${PIPER_CONFIG_PATH:-}"
-  --tts-cache-dir "${TTS_CACHE_DIR:-/home/pi/smartpi/cache/tts}"
+  --tts-cache-dir "${TTS_CACHE_DIR:-${PROJECT_ROOT}/cache/tts}"
   --keyword-spotter-command "${SHERPA_KWS_COMMAND:-sherpa-onnx-keyword-spotter}"
   --keyword-spotter-cli-command "${SHERPA_KWS_CLI:-sherpa-onnx-cli}"
   --kws-model-dir "${SHERPA_KWS_MODEL_DIR:-}"
@@ -118,6 +125,8 @@ ARGS=(
   --kws-num-threads "${SHERPA_KWS_NUM_THREADS:-2}"
   --openclaw-command "${OPENCLAW_COMMAND:-}"
   --openclaw-timeout-seconds "${OPENCLAW_TIMEOUT_SECONDS:-12}"
+  --agent-orchestrator-url "${AGENT_ORCHESTRATOR_URL:-http://127.0.0.1:8096}"
+  --agent-orchestrator-timeout-seconds "${AGENT_ORCHESTRATOR_TIMEOUT_SECONDS:-30}"
   --port "${PORT:-8093}"
 )
 
@@ -157,4 +166,9 @@ if [[ "${ENABLE_OPENCLAW:-0}" == "1" ]]; then
   ARGS+=(--enable-openclaw)
 fi
 
-exec /home/pi/smartpi/venv/bin/python /home/pi/smartpi/edge/smartpi_voice_agent.py "${ARGS[@]}"
+if [[ "${ENABLE_AGENT_ORCHESTRATOR:-0}" == "1" ]]; then
+  ARGS+=(--enable-agent-orchestrator)
+fi
+
+VOICE_AGENT_SCRIPT="${VOICE_AGENT_SCRIPT:-${PROJECT_ROOT}/edge/smartpi_voice_agent.py}"
+exec "${PYTHON_BIN}" "${VOICE_AGENT_SCRIPT}" "${ARGS[@]}"

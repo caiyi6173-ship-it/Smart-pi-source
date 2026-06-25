@@ -281,6 +281,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--enable-openclaw", action="store_true")
     parser.add_argument("--openclaw-command", default=os.environ.get("OPENCLAW_COMMAND", ""))
     parser.add_argument("--openclaw-timeout-seconds", type=float, default=12.0)
+    parser.add_argument("--enable-agent-orchestrator", action="store_true")
+    parser.add_argument("--agent-orchestrator-url", default=os.environ.get("AGENT_ORCHESTRATOR_URL", "http://127.0.0.1:8096"))
+    parser.add_argument(
+        "--agent-orchestrator-timeout-seconds",
+        type=float,
+        default=float(os.environ.get("AGENT_ORCHESTRATOR_TIMEOUT_SECONDS", "30")),
+    )
     return parser
 
 
@@ -357,6 +364,7 @@ class VoiceAgent:
         )
         self.direct_llm_enabled = bool(args.enable_direct_llm and args.llm_api_key and args.llm_base_url and args.llm_model)
         self.openclaw_enabled = bool(args.enable_openclaw and args.openclaw_command)
+        self.agent_orchestrator_enabled = bool(args.enable_agent_orchestrator and args.agent_orchestrator_url)
         self.audio_lock = threading.RLock()
         self.playback_lock = threading.RLock()
         self.turn_lock = threading.RLock()
@@ -1250,7 +1258,12 @@ class VoiceAgent:
         return "AWAITING_WAKE_WORD" if self.wake_listen_enabled else "IDLE"
 
     def route_command(self, text: str) -> str:
-        # 命令分流：设备控制优先走本地快路径，自由聊天再交给百炼或 OpenClaw。
+        # Agent Orchestrator is the preferred entry when enabled. Local routing remains a fallback.
+        if self.agent_orchestrator_enabled:
+            agent_reply, _action_planned = self.ask_agent_orchestrator_reply(text)
+            if agent_reply:
+                return agent_reply
+
         fallback_reply = self.route_command_locally(text)
         if fallback_reply:
             return fallback_reply
@@ -1261,10 +1274,10 @@ class VoiceAgent:
                 return direct_reply
             if self.last_error:
                 lowered = self.last_error.lower()
-                if "free tier" in lowered or "额度" in self.last_error:
-                    return "当前语音助手的自由对话模型额度已用尽，请稍后再试或切换到可用额度。"
+                if "free tier" in lowered or "\u989d\u5ea6" in self.last_error:
+                    return "\u5f53\u524d\u8bed\u97f3\u52a9\u624b\u7684\u81ea\u7531\u5bf9\u8bdd\u6a21\u578b\u989d\u5ea6\u5df2\u7528\u5c3d\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u6216\u5207\u6362\u5230\u53ef\u7528\u989d\u5ea6\u3002"
                 if "404 the model" in lowered or "does not exist" in lowered:
-                    return "当前语音助手的自由对话模型配置异常，请检查百炼模型配置。"
+                    return "\u5f53\u524d\u8bed\u97f3\u52a9\u624b\u7684\u81ea\u7531\u5bf9\u8bdd\u6a21\u578b\u914d\u7f6e\u5f02\u5e38\uff0c\u8bf7\u68c0\u67e5\u6a21\u578b\u914d\u7f6e\u3002"
 
         if self.openclaw_enabled:
             openclaw_reply, _action_executed = self.ask_openclaw_reply(text)
@@ -1272,11 +1285,11 @@ class VoiceAgent:
                 return openclaw_reply
             if self.last_error:
                 lowered = self.last_error.lower()
-                if "free tier" in lowered or "额度" in self.last_error:
-                    return "当前语音助手的自由对话模型额度已用尽，请稍后再试或切换到可用额度。"
+                if "free tier" in lowered or "\u989d\u5ea6" in self.last_error:
+                    return "\u5f53\u524d\u8bed\u97f3\u52a9\u624b\u7684\u81ea\u7531\u5bf9\u8bdd\u6a21\u578b\u989d\u5ea6\u5df2\u7528\u5c3d\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u6216\u5207\u6362\u5230\u53ef\u7528\u989d\u5ea6\u3002"
                 if "404 the model" in lowered or "does not exist" in lowered:
-                    return "当前语音助手的自由对话模型配置异常，请检查 OpenClaw 模型配置。"
-        return "我听到了，但当前无法完成这个请求。"
+                    return "\u5f53\u524d\u8bed\u97f3\u52a9\u624b\u7684\u81ea\u7531\u5bf9\u8bdd\u6a21\u578b\u914d\u7f6e\u5f02\u5e38\uff0c\u8bf7\u68c0\u67e5 OpenClaw \u6a21\u578b\u914d\u7f6e\u3002"
+        return "\u6211\u542c\u5230\u4e86\uff0c\u4f46\u5f53\u524d\u65e0\u6cd5\u5b8c\u6210\u8fd9\u4e2a\u8bf7\u6c42\u3002"
 
     def is_probably_device_command(self, text: str) -> bool:
         normalized = text.replace(" ", "")
@@ -1664,6 +1677,64 @@ class VoiceAgent:
         if clean_reply and clean_reply != action_reply:
             return f"{clean_reply}\n{action_reply}", True
         return action_reply, True
+
+    def ask_agent_orchestrator_reply(self, text: str) -> tuple[str | None, bool]:
+        if not self.agent_orchestrator_enabled:
+            return None, False
+
+        payload = {
+            "session_id": self.turn_id or "voice",
+            "message": text,
+            "input_type": "voice",
+            "user_context": {
+                "source": "smartpi_voice_agent",
+                "confirm_device_action": False,
+            },
+            "options": {
+                "include_trace": False,
+                "include_citations": True,
+            },
+        }
+        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        url = f"{self.args.agent_orchestrator_url.rstrip('/')}/api/v1/agent/chat"
+        req = request.Request(
+            url,
+            data=data,
+            headers={"Content-Type": "application/json; charset=utf-8"},
+            method="POST",
+        )
+        try:
+            started = time.monotonic()
+            with request.urlopen(req, timeout=max(3.0, self.args.agent_orchestrator_timeout_seconds)) as response:
+                result = json.loads(response.read().decode("utf-8"))
+            self.last_llm_ms = int((time.monotonic() - started) * 1000)
+        except error.URLError as exc:
+            self.last_error = f"Agent Orchestrator \u8c03\u7528\u5931\u8d25\uff1a{exc}"
+            return None, False
+        except Exception as exc:
+            self.last_error = f"Agent Orchestrator \u8fd4\u56de\u5f02\u5e38\uff1a{exc}"
+            return None, False
+
+        answer = str(result.get("answer") or "").strip()
+        if not answer:
+            self.last_error = "Agent Orchestrator \u8fd4\u56de\u4e86\u7a7a\u56de\u7b54\u3002"
+            return None, False
+
+        actions = result.get("actions") or []
+        action_planned = False
+        if actions:
+            action = actions[0] if isinstance(actions[0], dict) else {}
+            marker = str(action.get("action_marker") or "").strip()
+            dry_run = bool(action.get("dry_run", True))
+            executed = bool(action.get("executed", False))
+            action_name = str(action.get("action") or "").strip()
+            if marker and marker not in answer:
+                answer = f"{answer}\n{marker}"
+            if action_name and dry_run and not executed:
+                answer = f"{answer}\n\u5df2\u8fdb\u5165\u65c1\u8def\u89c4\u5212\u6a21\u5f0f\uff0c\u8bbe\u5907\u52a8\u4f5c {action_name} \u672a\u6267\u884c\u3002"
+            action_planned = True
+
+        return self.compress_reply_for_voice(answer), action_planned
 
     def ask_direct_llm_reply(self, text: str) -> tuple[str | None, bool]:
         if not self.direct_llm_enabled:

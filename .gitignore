@@ -38,6 +38,10 @@ data/chroma/
 data/qdrant/
 data/processed/
 data/local_vectors.json
+**/data/local_vectors.json
+**/data/chroma/
+**/data/qdrant/
+**/data/processed/
 
 # Model artifacts
 *.pt
@@ -52,8 +56,8 @@ runs/
 
 # OpenClaw runtime state
 .openclaw/
-agents/
-sessions/
+/agents/
+/sessions/
 workspace-state.json
 
 # OS/editor noise

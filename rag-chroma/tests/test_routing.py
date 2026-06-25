@@ -60,6 +60,29 @@ def test_local_rerank_prefers_classic_source_for_classic_query():
     assert ranked[0].id == "classic"
 
 
+def test_local_rerank_prefers_exact_classic_book_title():
+    other_classic = Chunk(
+        id="other-classic",
+        document_id="other-doc",
+        text="伤寒一日，太阳受之。太阳主表，其证头项痛，腰脊强。",
+        score=0.95,
+        lexical_score=0.95,
+        metadata={"source_type": "classic_text", "title": "望诊遵经"},
+    )
+    target_classic = Chunk(
+        id="target-classic",
+        document_id="target-doc",
+        text="属性：1．太阳之为病，脉浮、头项强痛而恶寒。",
+        score=0.92,
+        lexical_score=0.92,
+        metadata={"source_type": "classic_text", "title": "457-伤寒论"},
+    )
+
+    ranked = local_rerank("伤寒论中太阳病是什么？", [other_classic, target_classic], top_k=2)
+
+    assert ranked[0].id == "target-classic"
+
+
 def test_local_rerank_prefers_modern_source_for_explainer_query():
     modern_chunk = Chunk(
         id="modern",
