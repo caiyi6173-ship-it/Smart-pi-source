@@ -1,0 +1,21 @@
+[Unit]
+Description=smartpi Agent Orchestrator
+After=network-online.target smarttcm-rag-chroma.service
+Wants=network-online.target smarttcm-rag-chroma.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/SmartTCM/agent-orchestrator
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-/home/pi/SmartTCM/agent-orchestrator/.env
+ExecStart=/home/pi/SmartTCM/agent-orchestrator/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8096
+Restart=always
+RestartSec=3
+StartLimitIntervalSec=60
+StartLimitBurst=10
+StandardOutput=append:/home/pi/SmartTCM/data/results/agent_orchestrator.log
+StandardError=append:/home/pi/SmartTCM/data/results/agent_orchestrator.log
+
+[Install]
+WantedBy=multi-user.target

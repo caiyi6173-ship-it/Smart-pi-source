@@ -15,6 +15,12 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
+# Frontend dependencies and build output
+node_modules/
+dist/
+web-dashboard/node_modules/
+web-dashboard/dist/
+
 # Runtime data and logs
 *.log
 *.bak
@@ -23,6 +29,8 @@ __pycache__/
 *.orig
 *.sqlite
 *.db
+backups/
+exports/
 *.wav
 *.mp3
 *.jpg

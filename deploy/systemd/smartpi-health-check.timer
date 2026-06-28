@@ -1,0 +1,11 @@
+[Unit]
+Description=Run smartpi service health check every 2 minutes
+
+[Timer]
+OnBootSec=90
+OnUnitActiveSec=2min
+AccuracySec=15s
+Unit=smartpi-health-check.service
+
+[Install]
+WantedBy=timers.target

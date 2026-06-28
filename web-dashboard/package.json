@@ -1,0 +1,23 @@
+{
+  "name": "smartpi-web-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4173"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "pinia": "^2.3.1",
+    "vite": "^6.3.5",
+    "vue": "^3.5.17",
+    "vue-router": "^4.6.4",
+    "vue-tsc": "^2.2.10"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "^5.8.3"
+  }
+}

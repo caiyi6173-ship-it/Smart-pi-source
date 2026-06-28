@@ -1,0 +1,9 @@
+/home/pi/SmartTCM/data/results/*.log {
+    size 10M
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+}

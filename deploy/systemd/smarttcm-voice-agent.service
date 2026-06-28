@@ -1,0 +1,21 @@
+[Unit]
+Description=SmartTCM Raspberry Pi Voice Agent
+After=network-online.target smarttcm-edge-bridge.service smarttcm-rag-chroma.service smartpi-agent-orchestrator.service
+Wants=network-online.target smarttcm-rag-chroma.service smartpi-agent-orchestrator.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/SmartTCM
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-/home/pi/SmartTCM/config/voice_agent.env
+ExecStart=/home/pi/SmartTCM/edge/pi_run_voice_agent.sh
+Restart=always
+RestartSec=3
+StartLimitIntervalSec=60
+StartLimitBurst=10
+StandardOutput=append:/home/pi/SmartTCM/data/results/voice_agent.log
+StandardError=append:/home/pi/SmartTCM/data/results/voice_agent.log
+
+[Install]
+WantedBy=multi-user.target

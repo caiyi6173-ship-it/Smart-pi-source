@@ -1,0 +1,12 @@
+[Unit]
+Description=smartpi service health check
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/pi/SmartTCM
+ExecStart=/home/pi/SmartTCM/scripts/health_check_services.py --restart-unhealthy
+StandardOutput=append:/home/pi/SmartTCM/data/results/health_check.log
+StandardError=append:/home/pi/SmartTCM/data/results/health_check.log

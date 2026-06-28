@@ -1,4 +1,4 @@
-# smartpi
+﻿# smartpi
 
 smartpi 是一个运行在树莓派上的中医智能助手项目，围绕“边缘感知、语音交互、知识检索、设备联动”构建。项目把舌象视觉分析、语音助手、传感器采集、OpenClaw 智能体协同，以及中医知识库 RAG 服务整合到同一套设备侧系统中。
 
@@ -78,6 +78,8 @@ flowchart LR
 | `smartpi_edge_bridge.py` | 边缘桥 | `8092` |
 | `smartpi_voice_agent.py` | 语音助手 | `8093` |
 | `rag-chroma/app/main.py` | RAG API | `8094` / `8095` |
+| web-backend/app/main.py | Web 控制台业务后端 / SQLite | 18080 |
+| web-dashboard | 电脑端 Web 控制台前端 | 5173 |
 
 ## 仓库结构
 
@@ -86,6 +88,15 @@ flowchart LR
 
 - `rag-chroma/`
   当前主用的中医知识库 RAG 服务，基于 FastAPI，支持本地开发和树莓派部署。
+
+- gent-orchestrator/
+  7 Agent 编排服务，负责意图路由、安全分诊、RAG 调用、舌象解释、设备动作 dry-run 和最终回答合成。
+
+- web-dashboard/
+  电脑端 Web 控制台前端，Vue 3 + Vite + TypeScript，统一展示视频流、RAG 问答、Agent、语音助手、传感器、设备控制和健康状态，支持 Mock API 演示模式。
+
+- web-backend/
+  Web 控制台业务后端，FastAPI + SQLite，保存审计日志、RAG 问答历史、Agent 运行记录、设备动作和服务健康快照，提供数据库管理命令。
 
 - `config/`
   运行配置模板，包括语音代理、边缘桥、传感器和 MJPEG 服务配置。
@@ -117,6 +128,7 @@ flowchart LR
 - 可以通过 RAG 服务检索中医知识并返回带引用回答
 - 可以将古籍资料和现代中医科普资料混合导入知识库
 - 可以按服务拆分部署，并通过 systemd 常驻运行
+- 可以通过电脑端 Web 控制台查看设备视频流、RAG 问答、Agent 决策和健康状态，并把操作记录写入 SQLite
 
 ## 典型工作流程
 
@@ -293,6 +305,8 @@ AGENT_ORCHESTRATOR_TIMEOUT_SECONDS=30
 - RAG 测试环境与自动化测试补齐
 - YOLO 目录进一步收敛
 - 顶层部署文档和硬件接线说明补齐
+- Web 控制台生产部署（Nginx/Caddy 统一入口）和登录鉴权
+- web-backend 数据库从 SQLite 升级到 PostgreSQL 的可选路径
 
 ## 相关文档
 
@@ -301,3 +315,5 @@ AGENT_ORCHESTRATOR_TIMEOUT_SECONDS=30
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [CHANGELOG.md](CHANGELOG.md)
 - [rag-chroma/README.md](rag-chroma/README.md)
+- [web-dashboard/README.md](web-dashboard/README.md)
+- [web-backend/README.md](web-backend/README.md)
